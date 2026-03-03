@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulir Pendaftaran Pelatihan UMKM – Validasi Input</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --surface2: #1e2333;
+    --border: #2a3045;
+    --accent: #3d82f6;
+    --accent2: #22d3ae;
+    --warn: #f59e0b;
+    --danger: #ef4444;
+    --success: #22c55e;
+    --text: #e8ecf5;
+    --muted: #6b7a9e;
+    --font: 'Plus Jakarta Sans', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    background: linear-gradient(135deg, #0f1117 0%, #151a28 60%, #0d1f3c 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(61,130,246,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(61,130,246,0.12);
+    border: 1px solid rgba(61,130,246,0.3);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  header p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ─── LAYOUT ─── */
+  .main-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px 0;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* ─── SECTION LABELS ─── */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ─── FORM CARD ─── */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+  .form-header {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-header h2 {
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .form-header p {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ─── FIELD GROUP ─── */
+  .field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .field-group.full { grid-column: 1 / -1; }
+
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #9ba8c5;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  label .req { color: var(--danger); font-size: 10px; }
+  label .tag {
+    font-family: var(--mono);
+    font-size: 9px;
+    background: rgba(61,130,246,0.1);
+    border: 1px solid rgba(61,130,246,0.25);
+    color: var(--accent);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  input, select, textarea {
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 13px;
+    font-family: var(--font);
+    font-size: 13.5px;
+    color: var(--text);
+    transition: border-color .2s, box-shadow .2s, background .2s;
+    outline: none;
+    width: 100%;
+  }
+  input:focus, select:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(61,130,246,0.12);
+    background: #1a2035;
+  }
+  input.error { border-color: var(--danger) !important; background: rgba(239,68,68,0.05); }
+  input.valid { border-color: var(--success) !important; background: rgba(34,197,94,0.04); }
+
+  .field-hint {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--mono);
+  }
+  .field-error {
+    font-size: 11px;
+    color: var(--danger);
+    display: none;
+    align-items: center;
+    gap: 4px;
+    animation: shake .3s ease;
+  }
+  .field-error.show { display: flex; }
+  .field-success {
+    font-size: 11px;
+    color: var(--success);
+    display: none;
+    align-items: center;
+    gap: 4px;
+  }
+  .field-success.show { display: flex; }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)}
+  }
+
+  /* ─── CHAR COUNTER ─── */
+  .counter-row { display: flex; justify-content: space-between; align-items: center; }
+  .char-counter {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--muted);
+    transition: color .2s;
+  }
+  .char-counter.warn { color: var(--warn); }
+  .char-counter.over { color: var(--danger); }
+
+  /* ─── SUBMIT BUTTON ─── */
+  .btn-submit {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, #3d82f6, #2563eb);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity .2s, transform .15s;
+    margin-top: 8px;
+    letter-spacing: 0.02em;
+  }
+  .btn-submit:hover { opacity: .9; transform: translateY(-1px); }
+  .btn-submit:active { transform: translateY(0); }
+
+  /* ─── SIDEBAR: VALIDATION PANEL ─── */
+  .sidebar { display: flex; flex-direction: column; gap: 16px; }
+
+  .val-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .val-card:hover { border-color: #3a4560; }
+  .val-header {
+    padding: 13px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .val-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .val-title { font-size: 13px; font-weight: 700; flex: 1; }
+  .val-num {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 5px;
+  }
+  .val-body {
+    padding: 0 16px 14px;
+    display: none;
+  }
+  .val-body.open { display: block; }
+  .val-desc { font-size: 12px; color: var(--muted); margin-bottom: 10px; line-height: 1.6; }
+
+  /* ─── ERROR MESSAGE BOXES ─── */
+  .err-box {
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-size: 11.5px;
+    line-height: 1.5;
+    border-left: 3px solid;
+  }
+  .err-box.danger { background: rgba(239,68,68,0.08); border-color: var(--danger); color: #fca5a5; }
+  .err-box.warn { background: rgba(245,158,11,0.08); border-color: var(--warn); color: #fcd34d; }
+  .err-box.info { background: rgba(61,130,246,0.08); border-color: var(--accent); color: #93c5fd; }
+  .err-box.success { background: rgba(34,197,94,0.08); border-color: var(--success); color: #86efac; }
+
+  .err-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: .7;
+    margin-bottom: 3px;
+  }
+
+  /* ─── SCENARIO TABLE ─── */
+  .scenario-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    margin-top: 8px;
+  }
+  .scenario-table th {
+    text-align: left;
+    padding: 6px 8px;
+    background: var(--surface2);
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .scenario-table td {
+    padding: 7px 8px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .badge {
+    display: inline-flex;
+    padding: 2px 7px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: var(--mono);
+  }
+  .badge.r { background: rgba(239,68,68,0.15); color: #fca5a5; }
+  .badge.g { background: rgba(34,197,94,0.15); color: #86efac; }
+
+  /* ─── MODAL ─── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px;
+    max-width: 420px;
+    width: 90%;
+    animation: popIn .25s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes popIn {
+    from { transform: scale(.85); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal-icon { font-size: 36px; margin-bottom: 12px; }
+  .modal h3 { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+  .modal p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .modal .modal-code {
+    font-family: var(--mono);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 11.5px;
+    color: var(--danger);
+    margin: 12px 0;
+  }
+  .modal-btns { display: flex; gap: 10px; margin-top: 18px; }
+  .btn-modal-ok {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-modal-cancel {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: transparent;
+    color: var(--text);
+  }
+
+  /* ─── SUCCESS SCREEN ─── */
+  .success-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .success-screen.show { display: block; }
+  .success-screen .big-icon { font-size: 60px; margin-bottom: 16px; }
+  .success-screen h2 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+  .success-screen p { font-size: 14px; color: var(--muted); }
+  .kode-peserta {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent2);
+    background: rgba(34,211,174,0.1);
+    border: 1.5px solid rgba(34,211,174,0.3);
+    border-radius: 10px;
+    padding: 10px 24px;
+    margin: 16px 0;
+    letter-spacing: 0.12em;
+  }
+
+  /* ─── PROGRESS BAR ─── */
+  .progress-wrap { margin: 0 0 20px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width .4s ease; }
+
+  /* ─── DB CHECK LOADING ─── */
+  .db-check {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: var(--accent);
+    padding: 6px 0;
+  }
+  .db-check.show { display: flex; }
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(61,130,246,0.3);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  select option { background: #1e2333; }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-size: 13px;
+    font-weight: 500;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    z-index: 200;
+    animation: slideUp .3s ease;
+    max-width: 320px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .toast.show { display: flex; }
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .toast.t-danger { border-color: rgba(239,68,68,0.4); }
+  .toast.t-success { border-color: rgba(34,197,94,0.4); }
+  .toast.t-warn { border-color: rgba(245,158,11,0.4); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-badge">🏛️ Dinas Koperasi &amp; UMKM — Kota Tangerang Selatan</div>
+  <h1>Formulir Pendaftaran Pelatihan UMKM<br>— Sistem Validasi Input Terintegrasi</h1>
+  <p>Mockup interaktif • 6 Teknik Validasi Input • Skenario Dialog Lengkap</p>
+</header>
+
+<div class="main-wrap">
+  <!-- ═══ FORM KIRI ═══ -->
+  <div>
+    <div class="section-label">Formulir Pendaftaran</div>
+    <div class="form-card">
+      <div class="form-header">
+        <h2>📋 Data Peserta Pelatihan</h2>
+        <p>Semua field bertanda * wajib diisi. Data akan diverifikasi secara real-time.</p>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress-label"><span>Kelengkapan Data</span><span id="progPct">0%</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+      </div>
+
+      <div id="formContent">
+        <div class="field-grid">
+
+          <!-- NAMA LENGKAP -->
+          <div class="field-group full">
+            <label>Nama Lengkap <span class="req">*</span> <span class="tag">min 3, max 80 karakter</span></label>
+            <input type="text" id="nama" placeholder="Masukkan nama lengkap sesuai KTP" maxlength="80"
+              oninput="validateNama()" autocomplete="off">
+            <div class="counter-row">
+              <span class="field-error" id="namaErr">⚠ Nama lengkap wajib diisi (min. 3 karakter)</span>
+              <span class="char-counter" id="namaCount">0/80</span>
+            </div>
+            <span class="field-success" id="namaOk">✓ Nama valid</span>
+          </div>
+
+          <!-- NIK -->
+          <div class="field-group">
+            <label>NIK <span class="req">*</span> <span class="tag">16 digit angka</span></label>
+            <input type="text" id="nik" placeholder="Contoh: 3671012509000001" maxlength="16"
+              oninput="validateNIK()" inputmode="numeric">
+            <span class="field-error" id="nikErr">⚠ NIK wajib diisi (16 digit angka)</span>
+            <span class="field-success" id="nikOk">✓ NIK valid</span>
+            <span class="field-hint">Format: 16 digit — angka saja</span>
+          </div>
+
+          <!-- TANGGAL LAHIR -->
+          <div class="field-group">
+            <label>Tanggal Lahir <span class="req">*</span> <span class="tag">usia 16–100 tahun</span></label>
+            <input type="date" id="tgl" oninput="validateTgl()" max="">
+            <span class="field-error" id="tglErr">⚠ Tanggal lahir tidak valid atau usia di luar rentang 16–100 tahun</span>
+            <span class="field-success" id="tglOk">✓ Tanggal lahir valid</span>
+          </div>
+
+          <!-- ALAMAT -->
+          <div class="field-group full">
+            <label>Alamat Domisili <span class="req">*</span> <span class="tag">min 10 karakter</span></label>
+            <input type="text" id="alamat" placeholder="Jl. Nama Jalan, RT/RW, Kelurahan, Kecamatan, Kota"
+              oninput="validateAlamat()">
+            <span class="field-error" id="alamatErr">⚠ Alamat wajib diisi (min. 10 karakter)</span>
+            <span class="field-success" id="alamatOk">✓ Alamat valid</span>
+          </div>
+
+          <!-- NOMOR HP -->
+          <div class="field-group">
+            <label>Nomor HP <span class="req">*</span> <span class="tag">10–13 digit</span></label>
+            <input type="text" id="hp" placeholder="Contoh: 081234567890" maxlength="13"
+              oninput="validateHP()" inputmode="numeric">
+            <span class="db-check" id="hpDbCheck"><div class="spinner"></div> Mengecek duplikasi ke database…</span>
+            <span class="field-error" id="hpErr">⚠ Nomor HP tidak valid atau sudah terdaftar</span>
+            <span class="field-success" id="hpOk">✓ Nomor HP valid &amp; tersedia</span>
+            <span class="field-hint">Format: dimulai 08 / +62, tanpa spasi</span>
+          </div>
+
+          <!-- KATEGORI USAHA -->
+          <div class="field-group">
+            <label>Kategori Usaha <span class="req">*</span></label>
+            <select id="kategori" onchange="validateKategori()">
+              <option value="">— Pilih Kategori —</option>
+              <option value="kuliner">🍔 Kuliner &amp; Makanan</option>
+              <option value="fashion">👗 Fashion &amp; Tekstil</option>
+              <option value="kerajinan">🎨 Kerajinan Tangan</option>
+              <option value="digital">💻 Produk Digital / Jasa</option>
+              <option value="pertanian">🌾 Pertanian &amp; Agribisnis</option>
+              <option value="lainnya">📦 Lainnya</option>
+            </select>
+            <span class="field-error" id="kategoriErr">⚠ Kategori usaha wajib dipilih</span>
+            <span class="field-success" id="kategoriOk">✓ Kategori dipilih</span>
+          </div>
+
+          <!-- OMZET -->
+          <div class="field-group">
+            <label>Omzet per Bulan (Rp) <span class="req">*</span> <span class="tag">0 – 4.8 M</span></label>
+            <input type="number" id="omzet" placeholder="Contoh: 5000000" min="0" max="4800000000"
+              oninput="validateOmzet()">
+            <span class="field-error" id="omzetErr">⚠ Omzet tidak valid (tidak boleh negatif atau melebihi batas)</span>
+            <span class="field-success" id="omzetOk">✓ Omzet valid</span>
+            <span class="field-hint">Min: Rp 0 | Max: Rp 4.800.000.000</span>
+          </div>
+
+          <!-- KODE PESERTA -->
+          <div class="field-group">
+            <label>Kode Peserta <span class="req">*</span> <span class="tag">format: TNG-XXXX</span></label>
+            <input type="text" id="kode" placeholder="Contoh: TNG-2024" maxlength="8"
+              oninput="validateKode()" style="text-transform:uppercase">
+            <span class="field-error" id="kodeErr">⚠ Format kode peserta: TNG-XXXX (3 huruf, dash, 4 angka)</span>
+            <span class="field-success" id="kodeOk">✓ Kode peserta valid</span>
+            <span class="field-hint">Format: TNG-0001 s/d TNG-9999</span>
+          </div>
+
+        </div>
+
+        <button class="btn-submit" onclick="submitForm()">
+          Daftarkan Sekarang →
+        </button>
+      </div>
+
+      <!-- SUCCESS SCREEN -->
+      <div class="success-screen" id="successScreen">
+        <div class="big-icon">🎉</div>
+        <h2>Pendaftaran Berhasil!</h2>
+        <p>Kode peserta Anda:</p>
+        <div class="kode-peserta" id="successKode">TNG-0001</div>
+        <p style="font-size:12px;margin-top:8px;">Simpan kode ini. Konfirmasi akan dikirim ke nomor HP yang terdaftar.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SIDEBAR KANAN ═══ -->
+  <div class="sidebar">
+    <div class="section-label">Skenario Validasi (6 Teknik)</div>
+
+    <!-- V1: Missing Data -->
+    <div class="val-card">
+      <div class="val-header" onclick="toggleVal(this)">
+        <div class="val-icon" style="background:rgba(239,68,68,0.12); color:#f87171;">🔴</div>
+        <div class="val-title">Test for Missing Data</div>
+        <span class="val-num">V-01</span>
+      </div>
+      <div class="val-body open">
+        <p class="val-desc">Deteksi field kosong sebelum data dikirim. Semua field wajib (*) divalidasi saat submit dan saat focus hilang (on-blur).</p>
+        <div class="err-box danger">
+          <div class="err-label">❌ Error Message</div>
+          "Field <strong>NIK</strong> wajib diisi."<br>
+          "Field <strong>Nama Lengkap</strong> wajib diisi."<br>
+          "Field <strong>Nomor HP</strong> wajib diisi."
+        </div>
+        <div class="err-box success">
+          <div class="err-label">✅ Mekanisme</div>
+          Sistem memblokir submit → highlight border merah → scroll ke field pertama yang kosong → tampilkan pesan error spesifik per field.
+        </div>
+        <table class="scenario-table">
+          <tr><th>Skenario</th><th>Sistem</th></tr>
+          <tr><td>NIK dikosongkan, klik Submit</td><td><span class="badge r">REJECT</span> "NIK wajib diisi"</td></tr>
+          <tr><td>Semua field terisi</td><td><span class="badge g">PASS</span> Lanjut validasi</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- V2: Field Length -->
+    <div class="val-card">
+      <div class="val-header" onclick="toggleVal(this)">
+        <div class="val-icon" style="background:rgba(245,158,11,0.12); color:#fbbf24;">📏</div>
+        <div class="val-title">Test for Correct Field Length</div>
+        <span class="val-num">V-02</span>
+      </div>
+      <div class="val-body">
+        <p class="val-desc">Validasi panjang karakter untuk setiap field dengan aturan minimal dan maksimal.</p>
+        <div class="err-box warn">
+          <div class="err-label">⚠ Aturan Panjang</div>
+          NIK: tepat <strong>16 digit</strong><br>
+          Nama: min <strong>3</strong>, max <strong>80</strong> karakter<br>
+          No. HP: min <strong>10</strong>, max <strong>13</strong> digit<br>
+          Alamat: min <strong>10</strong> karakter<br>
+          Kode Peserta: tepat <strong>8</strong> karakter (TNG-XXXX)
+        </div>
+        <div class="err-box danger">
+          <div class="err-label">❌ Error Message</div>
+          "NIK harus tepat 16 digit (saat ini: 14 digit)."<br>
+          "Nama terlalu pendek — minimal 3 karakter."<br>
+          "Nomor HP harus 10–13 digit."
+        </div>
+        <table class="scenario-table">
+          <tr><th>Input</th><th>Respons</th></tr>
+          <tr><td>NIK = "12345678" (8 digit)</td><td><span class="badge r">REJECT</span> panjang salah</td></tr>
+          <tr><td>NIK = 16 digit tepat</td><td><span class="badge g">PASS</span></td></tr>
+          <tr><td>HP = "0812" (4 digit)</td><td><span class="badge r">REJECT</span> terlalu pendek</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- V3: Class/Composition -->
+    <div class="val-card">
+      <div class="val-header" onclick="toggleVal(this)">
+        <div class="val-icon" style="background:rgba(168,85,247,0.12); color:#c084fc;">🔤</div>
+        <div class="val-title">Test for Class / Composition</div>
+        <span class="val-num">V-03</span>
+      </div>
+      <div class="val-body">
+        <p class="val-desc">Validasi tipe data dan komposisi karakter — apakah input sesuai kelas yang diharapkan (angka saja, huruf saja, alfanumerik, dll).</p>
+        <div class="err-box info">
+          <div class="err-label">📐 Aturan Tipe</div>
+          NIK → <strong>angka saja</strong> (regex: /^\d+$/)<br>
+          Nama → <strong>huruf &amp; spasi</strong> saja<br>
+          No. HP → <strong>angka</strong>, boleh awali +62<br>
+          Omzet → <strong>angka positif</strong><br>
+          Kode → <strong>TNG-[0-9]{4}</strong>
+        </div>
+        <div class="err-box danger">
+          <div class="err-label">❌ Error Message</div>
+          "NIK hanya boleh berisi angka. Karakter '#' tidak diizinkan."<br>
+          "Nama tidak boleh mengandung angka atau simbol."<br>
+          "Format kode peserta salah. Gunakan TNG-XXXX."
+        </div>
+        <table class="scenario-table">
+          <tr><th>Input</th><th>Respons</th></tr>
+          <tr><td>NIK = "36710-12509-001" (ada strip)</td><td><span class="badge r">REJECT</span> bukan angka</td></tr>
+          <tr><td>Nama = "Budi123"</td><td><span class="badge r">REJECT</span> ada angka</td></tr>
+          <tr><td>Kode = "TNS-1234"</td><td><span class="badge r">REJECT</span> bukan TNG</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- V4: Range/Reasonableness -->
+    <div class="val-card">
+      <div class="val-header" onclick="toggleVal(this)">
+        <div class="val-icon" style="background:rgba(34,197,94,0.12); color:#4ade80;">📊</div>
+        <div class="val-title">Test for Range / Reasonableness</div>
+        <span class="val-num">V-04</span>
+      </div>
+      <div class="val-body">
+        <p class="val-desc">Periksa apakah nilai berada dalam rentang yang masuk akal secara bisnis dan logis.</p>
+        <div class="err-box info">
+          <div class="err-label">📋 Aturan Range</div>
+          Usia: <strong>16 – 100 tahun</strong><br>
+          Omzet: <strong>Rp 0 – Rp 4,8 Miliar</strong>/bulan<br>
+          Tanggal lahir: tidak boleh di masa depan<br>
+          NIK: digit ke-7–10 = tanggal lahir valid
+        </div>
+        <div class="err-box danger">
+          <div class="err-label">❌ Error Message</div>
+          "Usia Anda kurang dari 16 tahun. Program ini untuk pelaku usaha dewasa."<br>
+          "Usia melebihi 100 tahun — periksa kembali tanggal lahir Anda."<br>
+          "Tanggal lahir tidak boleh di masa depan."
+        </div>
+        <table class="scenario-table">
+          <tr><th>Skenario</th><th>Respons</th></tr>
+          <tr><td>Lahir 2015 (usia 9 th)</td><td><span class="badge r">REJECT</span> di bawah 16</td></tr>
+          <tr><td>Lahir 1900 (usia 124 th)</td><td><span class="badge r">REJECT</span> di atas 100</td></tr>
+          <tr><td>Lahir 1990 (usia 34 th)</td><td><span class="badge g">PASS</span></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- V5: Invalid Values -->
+    <div class="val-card">
+      <div class="val-header" onclick="toggleVal(this)">
+        <div class="val-icon" style="background:rgba(239,68,68,0.12); color:#fb923c;">🚫</div>
+        <div class="val-title">Test for Invalid Values</div>
+        <span class="val-num">V-05</span>
+      </div>
+      <div class="val-body">
+        <p class="val-desc">Menolak nilai yang secara semantik tidak valid walaupun format sudah benar — misalnya nilai negatif, nol tidak logis, atau pilihan tidak tersedia.</p>
+        <div class="err-box danger">
+          <div class="err-label">❌ Nilai yang Ditolak</div>
+          Omzet &lt; 0 → "Omzet tidak boleh bernilai negatif."<br>
+          Kategori = kosong → "Pilih kategori usaha yang valid."<br>
+          Tanggal lahir = hari ini → "Usia 0 tahun tidak valid."<br>
+          Kode peserta = "TNG-0000" → "Kode TNG-0000 tidak valid."
+        </div>
+        <div class="err-box warn">
+          <div class="err-label">⚙ Mekanisme Sistem</div>
+          Field ditandai merah → input direset atau dikunci → pesan error kontekstual ditampilkan → fokus kembali ke field bermasalah.
+        </div>
+        <table class="scenario-table">
+          <tr><th>Input</th><th>Respons</th></tr>
+          <tr><td>Omzet = -500000</td><td><span class="badge r">REJECT</span> negatif</td></tr>
+          <tr><td>Omzet = 0</td><td><span class="badge g">PASS</span> usaha baru</td></tr>
+          <tr><td>Kode = "TNG-0000"</td><td><span class="badge r">REJECT</span> tidak valid</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- V6: Comparison with Stored Data -->
+    <div class="val-card">
+      <div class="val-header" onclick="toggleVal(this)">
+        <div class="val-icon" style="background:rgba(34,211,174,0.12); color:#34d399;">🗄️</div>
+        <div class="val-title">Test for Comparison with Stored Data</div>
+        <span class="val-num">V-06</span>
+      </div>
+      <div class="val-body">
+        <p class="val-desc">Pengecekan database untuk mencegah duplikasi. Nomor HP dan NIK harus unik — satu nomor hanya untuk satu peserta.</p>
+        <div class="err-box info">
+          <div class="err-label">🔍 Prosedur Database</div>
+          1. Setelah field HP/NIK diisi → sistem mengirim query ke DB<br>
+          2. Animasi loading ditampilkan ("Mengecek ke database…")<br>
+          3. Jika sudah ada → tampilkan notifikasi duplikasi<br>
+          4. Jika unik → field ditandai hijau ✓
+        </div>
+        <div class="err-box danger">
+          <div class="err-label">❌ Error Duplikasi</div>
+          "Nomor HP <strong>081234567890</strong> sudah terdaftar atas nama <em>Budi Santoso</em>. Gunakan nomor HP berbeda."<br><br>
+          "NIK ini sudah digunakan untuk mendaftar sebelumnya."
+        </div>
+        <table class="scenario-table">
+          <tr><th>Skenario</th><th>Respons</th></tr>
+          <tr><td>HP sudah ada di DB</td><td><span class="badge r">REJECT</span> duplikat</td></tr>
+          <tr><td>HP belum terdaftar</td><td><span class="badge g">PASS</span> unik</td></tr>
+          <tr><td>NIK sudah digunakan</td><td><span class="badge r">REJECT</span> duplikat</td></tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ─── MODAL ERROR ─── -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-icon" id="modalIcon">⚠️</div>
+    <h3 id="modalTitle">Validasi Gagal</h3>
+    <p id="modalDesc">Terdapat kesalahan pada input Anda.</p>
+    <div class="modal-code" id="modalCode"></div>
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" onclick="closeModal()">Periksa Kembali</button>
+      <button class="btn-modal-ok" onclick="closeModal()">Mengerti</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TOAST ─── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════
+//  STATE
+// ══════════════════════════════════
+const DB_PHONES = ["081234567890", "089876543210", "082111222333"];
+const DB_NIKS   = ["3671012509000001", "3603014501930001"];
+let hpTimer = null;
+
+// ══════════════════════════════════
+//  TOGGLE SIDEBAR CARDS
+// ══════════════════════════════════
+function toggleVal(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ══════════════════════════════════
+//  PROGRESS
+// ══════════════════════════════════
+const FIELDS = ['nama','nik','tgl','alamat','hp','kategori','omzet','kode'];
+function updateProgress() {
+  let filled = 0;
+  FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.value && el.value.trim() !== '') filled++;
+  });
+  const pct = Math.round((filled / FIELDS.length) * 100);
+  document.getElementById('progFill').style.width = pct + '%';
+  document.getElementById('progPct').textContent = pct + '%';
+}
+
+// ══════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════
+function setError(id, msg) {
+  const el = document.getElementById(id);
+  el.classList.add('error'); el.classList.remove('valid');
+  showMsg(id + 'Err', msg, true);
+  hideMsg(id + 'Ok');
+}
+function setValid(id) {
+  const el = document.getElementById(id);
+  el.classList.remove('error'); el.classList.add('valid');
+  hideMsg(id + 'Err');
+  showMsg(id + 'Ok', null, false);
+}
+function clearState(id) {
+  const el = document.getElementById(id);
+  el && el.classList.remove('error','valid');
+  hideMsg(id + 'Err'); hideMsg(id + 'Ok');
+}
+function showMsg(id, text, isErr) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (text) el.innerHTML = (isErr ? '⚠ ' : '✓ ') + text;
+  el.classList.add('show');
+}
+function hideMsg(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove('show');
+}
+function showToast(msg, type='info', dur=3000) {
+  const t = document.getElementById('toast');
+  const icons = { danger:'❌', success:'✅', warn:'⚠️', info:'ℹ️' };
+  t.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  t.className = `toast show t-${type}`;
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+function showModal(icon, title, desc, code) {
+  document.getElementById('modalIcon').textContent = icon;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalDesc').textContent = desc;
+  document.getElementById('modalCode').textContent = code || '';
+  document.getElementById('modalCode').style.display = code ? 'block' : 'none';
+  document.getElementById('modalOverlay').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+// ══════════════════════════════════
+//  VALIDASI INDIVIDUAL
+// ══════════════════════════════════
+
+function validateNama() {
+  const v = document.getElementById('nama').value.trim();
+  const cnt = document.getElementById('namaCount');
+  const len = document.getElementById('nama').value.length;
+  cnt.textContent = len + '/80';
+  cnt.className = 'char-counter' + (len > 72 ? ' warn' : '') + (len >= 80 ? ' over' : '');
+  updateProgress();
+  if (!v) { setError('nama', 'Nama lengkap wajib diisi'); return false; }
+  if (v.length < 3) { setError('nama', `Nama terlalu pendek — minimal 3 karakter (saat ini ${v.length})`); return false; }
+  if (/\d/.test(v)) { setError('nama', 'Nama tidak boleh mengandung angka'); return false; }
+  if (/[^a-zA-Z\s'-]/.test(v)) { setError('nama', 'Nama hanya boleh berisi huruf, spasi, tanda kutip, dan strip'); return false; }
+  setValid('nama'); return true;
+}
+
+function validateNIK() {
+  const v = document.getElementById('nik').value.trim();
+  updateProgress();
+  if (!v) { setError('nik', 'NIK wajib diisi'); return false; }
+  if (/[^0-9]/.test(v)) { setError('nik', 'NIK hanya boleh berisi angka — hapus karakter non-angka'); return false; }
+  if (v.length !== 16) { setError('nik', `NIK harus tepat 16 digit (saat ini ${v.length} digit)`); return false; }
+  if (DB_NIKS.includes(v)) { setError('nik', 'NIK ini sudah terdaftar di sistem'); showModal('🚫','NIK Terduplikasi','NIK yang Anda masukkan sudah digunakan untuk mendaftar sebelumnya. Pastikan NIK sesuai KTP Anda.',`NIK: ${v}`); return false; }
+  setValid('nik'); return true;
+}
+
+function validateTgl() {
+  const v = document.getElementById('tgl').value;
+  updateProgress();
+  if (!v) { setError('tgl', 'Tanggal lahir wajib diisi'); return false; }
+  const today = new Date(); const dob = new Date(v);
+  if (dob > today) { setError('tgl', 'Tanggal lahir tidak boleh di masa depan'); return false; }
+  let age = today.getFullYear() - dob.getFullYear();
+  const m = today.getMonth() - dob.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) age--;
+  if (age < 16) { setError('tgl', `Usia Anda ${age} tahun — program ini untuk pelaku usaha min. 16 tahun`); return false; }
+  if (age > 100) { setError('tgl', `Usia ${age} tahun melebihi batas 100 tahun — periksa tanggal lahir Anda`); return false; }
+  setValid('tgl'); return true;
+}
+
+function validateAlamat() {
+  const v = document.getElementById('alamat').value.trim();
+  updateProgress();
+  if (!v) { setError('alamat', 'Alamat domisili wajib diisi'); return false; }
+  if (v.length < 10) { setError('alamat', `Alamat terlalu pendek — minimal 10 karakter (saat ini ${v.length})`); return false; }
+  setValid('alamat'); return true;
+}
+
+function validateHP() {
+  const v = document.getElementById('hp').value.trim();
+  updateProgress();
+  hideMsg('hpErr'); hideMsg('hpOk');
+  document.getElementById('hpDbCheck').classList.remove('show');
+  clearTimeout(hpTimer);
+
+  if (!v) { setError('hp', 'Nomor HP wajib diisi'); return false; }
+  if (/[^0-9+]/.test(v)) { setError('hp', 'Nomor HP hanya boleh berisi angka (atau awalan +62)'); return false; }
+  const cleaned = v.replace(/^\+62/, '0');
+  if (cleaned.length < 10 || cleaned.length > 13) {
+    setError('hp', `Nomor HP harus 10–13 digit (saat ini ${cleaned.length})`); return false;
+  }
+  if (!cleaned.startsWith('08')) { setError('hp', 'Nomor HP harus diawali 08 (atau +62)'); return false; }
+
+  // DB check simulation
+  document.getElementById('hpDbCheck').classList.add('show');
+  hpTimer = setTimeout(() => {
+    document.getElementById('hpDbCheck').classList.remove('show');
+    if (DB_PHONES.includes(cleaned)) {
+      setError('hp', `Nomor ${cleaned} sudah terdaftar — gunakan nomor HP berbeda`);
+      showModal('📱','Nomor HP Terduplikasi',
+        `Nomor HP ${cleaned} sudah digunakan oleh peserta lain. Setiap peserta wajib menggunakan nomor unik.`,
+        `Error: DUPLICATE_PHONE | Query: SELECT * FROM peserta WHERE no_hp='${cleaned}'`);
+    } else {
+      setValid('hp');
+    }
+  }, 1400);
+  return null;
+}
+
+function validateKategori() {
+  const v = document.getElementById('kategori').value;
+  updateProgress();
+  if (!v) { setError('kategori', 'Kategori usaha wajib dipilih'); return false; }
+  setValid('kategori'); return true;
+}
+
+function validateOmzet() {
+  const raw = document.getElementById('omzet').value;
+  const v = parseFloat(raw);
+  updateProgress();
+  if (raw === '' || raw === null) { setError('omzet', 'Omzet wajib diisi (masukkan 0 jika usaha baru)'); return false; }
+  if (isNaN(v)) { setError('omzet', 'Omzet harus berupa angka'); return false; }
+  if (v < 0) { setError('omzet', 'Omzet tidak boleh bernilai negatif — nilai minimum adalah Rp 0'); return false; }
+  if (v > 4800000000) { setError('omzet', `Omzet Rp ${v.toLocaleString('id')} melebihi batas UMKM (Rp 4.800.000.000/bulan)`); return false; }
+  setValid('omzet'); return true;
+}
+
+function validateKode() {
+  const raw = document.getElementById('kode').value.toUpperCase();
+  document.getElementById('kode').value = raw;
+  updateProgress();
+  if (!raw) { setError('kode', 'Kode peserta wajib diisi'); return false; }
+  if (!/^TNG-\d{4}$/.test(raw)) { setError('kode', 'Format salah. Gunakan: TNG-XXXX (contoh: TNG-2024)'); return false; }
+  if (raw === 'TNG-0000') { setError('kode', 'Kode TNG-0000 tidak valid — gunakan kode dari panitia'); return false; }
+  setValid('kode'); return true;
+}
+
+// ══════════════════════════════════
+//  SUBMIT
+// ══════════════════════════════════
+function submitForm() {
+  const checks = [
+    validateNama(), validateNIK(), validateTgl(),
+    validateAlamat(), validateKategori(), validateOmzet(), validateKode()
+  ];
+  const hpVal = validateHP();
+
+  const allOk = checks.every(c => c === true);
+  if (!allOk) {
+    showModal('⚠️','Data Belum Lengkap atau Tidak Valid',
+      'Beberapa field masih memiliki kesalahan. Periksa setiap field yang ditandai merah dan perbaiki sebelum mendaftar.',
+      null);
+    // scroll to first error
+    const first = document.querySelector('input.error, select.error');
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  if (hpVal === null) {
+    showToast('Sedang mengecek nomor HP ke database…', 'info');
+    return;
+  }
+
+  // success
+  document.getElementById('formContent').style.display = 'none';
+  const kode = document.getElementById('kode').value.toUpperCase();
+  document.getElementById('successKode').textContent = kode;
+  document.getElementById('successScreen').classList.add('show');
+  showToast('Pendaftaran berhasil! 🎉', 'success', 4000);
+}
+
+// Set max date for tanggal lahir
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('tgl').setAttribute('max', today);
+</script>
+</body>
+</html>
